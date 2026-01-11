@@ -3,54 +3,88 @@ package main
 import (
 	"encoding/base64"
 	"fmt"
+	"time"
 )
 
-func in(A string) {
-	admin := A
-	c := base64.StdEncoding.EncodeToString([]byte(admin))
-	fmt.Println("编码结果:", c)
-}
-func put(A string) {
-	admin := A
-	d, ok := base64.StdEncoding.DecodeString(admin)
-	if ok != nil {
-		panic(fmt.Errorf("解码失败: %v", ok))
-	}
-
-	D := string(d)
-	fmt.Println("解码结果:", D)
-}
-func Ifn(A string) {
-	for i := 1; i > 0; i++ {
-		if A == "exit" {
-			break
-		} else if A == "1" {
-
-			var admin string
-			fmt.Println("请输入你要编码的内容:")
-			fmt.Scanf("%s", &admin)
-			in(admin)
-
-		} else if A == "2" {
-
-			var admin string
-			fmt.Println("请输入你要执行解码的内容:")
-			fmt.Scanf("%s", &admin)
-			put(admin)
-
-		} else {
-			fmt.Println("输入无效,请输入1,2或exit。")
-			continue
+func main() {
+	print()
+	for {
+		// 判断用户输入逻辑
+		times()
+		fmt.Println("请输入你要执行的操作：")
+		var using string
+		fmt.Scanf("%s", &using)
+		fmt.Scanln()
+		num := Input(using)
+		times()
+		switch num {
+		case 1:
+			close()
+		case 2:
+			oppen()
+		case 3:
+			fmt.Println("程序已正常退出，再见～")
+			return
+		default:
+			fmt.Println("输入格式错误！请输入 1 / 2 / exit 其中一个指令")
 		}
 	}
 }
 
-func main() {
-	for i := 1; i > 0; i++ {
-		var A string
-		fmt.Println("请输入你要执行的选项 1编码 2解码 exit退出:")
-		fmt.Scanf("%s", &A)
-
-	}
-
+func times() {
+	time.Sleep(1 * time.Second) //停顿1s
 }
+func print() {
+	times()
+	fmt.Println("欢迎使用base64编解码程序：")
+	times()
+	fmt.Println("输入 1 : 进行 Base64 编码操作")
+	times()
+	fmt.Println("输入 2 : 进行 Base64 解码操作")
+	times()
+	fmt.Println("输入 exit : 退出本次操作")
+	times()
+}
+func Input(using string) int {
+	switch using {
+	case "1":
+		times()
+		fmt.Println("接下来执行编码操作...")
+		return 1
+	case "2":
+		times()
+		fmt.Println("接下来执行解码操作...")
+		return 2
+	case "exit":
+		times()
+		fmt.Println("正在退出程序...")
+		return 3
+	default:
+		return 0
+	}
+}
+func close() {
+	fmt.Println("请输入需要编码的字符串：")
+	admin := writing()
+	// 标准Base64编码
+	encoded := base64.StdEncoding.EncodeToString([]byte(admin))
+	fmt.Println("编码结果：", encoded)
+}
+func oppen() {
+	fmt.Println("请输入需要解码的字符串：")
+	encoded := writing()
+	decoded, err := base64.StdEncoding.DecodeString(encoded)
+	if err != nil {
+		fmt.Println("格式错误:", err)
+		return
+	}
+	fmt.Println("解码结果:", string(decoded))
+}
+func writing() string {
+	//输入
+	var str string
+	fmt.Scanf("%s", &str)
+	fmt.Scanln()
+	return str
+}
+
